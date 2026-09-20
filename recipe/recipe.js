@@ -198,10 +198,25 @@ function shoppingButton(slug) {
     onclick: add
   }, t('買い物リストに追加', 'Add to the shopping list'));
 
+  /*
+   * What goes on the list is what needs BUYING, not what is perishable. This
+   * said 生鮮 until 2026-09-21, which is a different rule and a wrong one: the
+   * household test is whether it needs a special trip, so カスリメティ and
+   * コチュカル go on the list although they keep for months, while salt and soy
+   * sauce off the rack stay off. See CLAUDE.md, ruled 2026-08-22 and refined
+   * 2026-09-20; the data was made consistent with it in fa35127.
+   *
+   * 家にある is doing real work in the second sentence. Some seasonings DO reach
+   * the list on their own, so "seasonings can be added from the list screen"
+   * implied an exclusion that is not true. The ones she already has at home are
+   * the ones the 調味料 drawer offers, which is what the list screen also says.
+   *
+   * Wording chosen by Chris on 2026-09-21 from three rendered options.
+   */
   const note = el('p', {
     class: 'recipe-cta-note',
-    text: t('リストに入るのは生鮮の材料だけです。調味料はリストの画面で足せます。',
-            'Only the fresh ingredients go on the list. Seasonings can be added from the list screen.')
+    text: t('リストに入るのは買う必要があるものだけです。家にある調味料はリストの画面で足せます。',
+            'Only the things you need to buy go on the list. Seasonings you already have can be added from the list screen.')
   });
 
   async function add() {
