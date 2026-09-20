@@ -1,0 +1,270 @@
+/*
+ * One dish's screen. Direction C, taken from the .rC rules in
+ * page/design/variants.html, which stays the comp.
+ *
+ * Every colour is a token from shell/tokens.css, including --stepnum, which the
+ * shell added on 2026-09-20 for the step numeral. No hex value lives here.
+ *
+ * Contrast measured by hand on 2026-09-20 against --paper, because the
+ * Impeccable detector runs DEGRADED on this machine and cannot compute it:
+ *   --ink     16.21:1   body and ingredient names
+ *   --mute     5.43:1   meta, pantry rows, the 目安 line at 11px
+ *   --accent   4.64:1   the title at 21px and the amounts at 13.5px
+ *   --cool     5.40:1   the video link and the substitute note
+ *   --stepnum  3.35:1   the step numeral, at 24px where AA asks 3:1
+ * Nothing here may be lightened without measuring it again.
+ */
+
+/* The recipe title is the screen title, so it uses the shell's heading rather
+   than a second one. Direction C draws it in the persimmon, which is the only
+   difference from the shell's default, so this is a scoped colour change and
+   not a restyle. The router sets data-screen on <body>. */
+body[data-screen="recipe"] .shell-screen-title { color: var(--accent); }
+
+/* ---------- photo ---------- */
+
+/*
+ * No aspect-ratio and no object-fit on purpose. The thumbnails carry the
+ * creators' own burnt-in headline text, and Chris's wife chose on 2026-09-20 to
+ * keep it because it is how she recognises the dish. Forcing a ratio would crop
+ * it. The image draws at its natural shape.
+ */
+.recipe-hero {
+  display: block;
+  width: calc(100% - var(--gutter) * 2);
+  height: auto;
+  margin: 10px var(--gutter) 0;
+  border-radius: 4px;
+  background: var(--rule);
+}
+
+/* ---------- time, servings, tags ---------- */
+
+.recipe-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 20px;
+  margin: 12px var(--gutter) 0;
+  font-size: var(--size-small);
+  color: var(--mute);
+}
+
+/* ---------- the video link ---------- */
+
+/*
+ * Doctrine deviation, stated here because the escape clause requires it. The
+ * hard rule is "animate only transform and opacity"; this transitions colour and
+ * border-colour too. Reason: the rule exists to keep animation off properties
+ * that force layout, and colour forces paint but never layout, so the cost the
+ * rule guards against is not present. The house already works this way, in the
+ * comp's .rC .back:hover and in the shell's own .shell-lang and .shell-back.
+ * Every duration is var(--quick), which the shell sets to 0s under
+ * prefers-reduced-motion, so all of it stops for anyone who asks it to.
+ */
+.recipe-video {
+  display: block;
+  width: max-content;
+  max-width: calc(100% - var(--gutter) * 2);
+  margin: 12px auto 0;
+  padding: 6px 2px;
+  font-size: var(--size-small);
+  color: var(--cool);
+  border-bottom: 1px solid transparent;
+  transition: color var(--quick) ease, border-color var(--quick) ease,
+              transform var(--quick) var(--ease);
+}
+.recipe-video::after { content: " ↗"; }
+.recipe-video:hover { color: var(--accent); border-bottom-color: var(--accent); transform: translateY(-1px); }
+.recipe-video:active { transform: translateY(0); }
+.recipe-video:focus-visible { outline: var(--focus-width) solid var(--focus-color); outline-offset: 3px; }
+
+/* ---------- section pills ---------- */
+
+.recipe-sect {
+  display: block;
+  width: calc(100% - var(--gutter) * 2);
+  margin: 22px auto 12px;
+  padding: 11px;
+  font-family: var(--face-body);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-align: center;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+}
+
+/* ---------- ingredients ---------- */
+
+.recipe-ing-sect { margin: 0; }
+
+/* The cards' own section labels: たれ, 衣, マリネ液. Bilingual on only 6 of the
+   42 distinct values, so in English this is usually still Japanese. That is the
+   data, and inventing translations here would be inventing content. */
+.recipe-ing-head {
+  margin: 16px var(--gutter) 6px;
+  font-family: var(--face-display);
+  font-weight: 700;
+  font-size: var(--size-small);
+  letter-spacing: .1em;
+  color: var(--mute);
+}
+
+.recipe-ing {
+  margin: 0 var(--gutter);
+  padding: 0;
+  list-style: none;
+}
+
+.recipe-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 13.5px;
+  border-bottom: 1px solid var(--rule);
+}
+.recipe-row:last-child { border-bottom: 0; }
+
+/* min-width:0 is what actually lets a long name shrink inside the flex row.
+   Without it a flex item refuses to go below its content width. */
+.recipe-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/*
+ * The amount wraps rather than holding one line. Measured across all 82 recipes
+ * in both languages on 2026-09-20: nowrap pushed rows to 698px inside a 375px
+ * frame, because some amounts are whole sentences ("2 tsp salt + 2 tsp Sichuan
+ * peppercorn, crushed"). Ten rows overflowed. Do not put nowrap back.
+ */
+.recipe-row em {
+  flex: 0 1 auto;
+  max-width: 58%;
+  font-style: normal;
+  font-weight: 500;
+  text-align: right;
+  color: var(--accent);
+  overflow-wrap: anywhere;
+}
+
+/* A pantry row under the household rule. Drawn quieter, as .rC li.p does, and
+   it is also what the server leaves out of the shopping list. */
+.recipe-row.is-pantry { color: var(--mute); }
+.recipe-row.is-pantry em { color: var(--mute); font-weight: 400; }
+
+/* The single substitute note in the vault: pot-au-feu's 牛すね肉. */
+.recipe-note {
+  display: block;
+  margin-top: 2px;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--cool);
+}
+
+/* ---------- the shopping button ---------- */
+
+.recipe-cta {
+  display: block;
+  width: calc(100% - var(--gutter) * 2);
+  margin: 20px var(--gutter) 0;
+  padding: 14px;
+  font: inherit;
+  font-size: var(--size-body);
+  font-weight: 500;
+  letter-spacing: .08em;
+  color: var(--paper);
+  background: var(--accent);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform var(--quick) var(--ease), opacity var(--quick) ease;
+}
+.recipe-cta:hover { transform: translateY(-1px); opacity: .92; }
+.recipe-cta:active { transform: translateY(0) scale(.99); }
+.recipe-cta:focus-visible { outline: var(--focus-width) solid var(--ink); outline-offset: 3px; }
+.recipe-cta:disabled {
+  cursor: default;
+  opacity: 1;
+  color: var(--mute);
+  background: transparent;
+  border: 1px solid var(--rule);
+  transform: none;
+}
+
+/* Says what the button actually does, so only six of eleven items turning up on
+   her list is never a surprise. Not a legend: it names the behaviour. */
+.recipe-cta-note {
+  margin: 8px var(--gutter) 0;
+  font-size: var(--size-fine);
+  line-height: 1.7;
+  color: var(--mute);
+  text-align: center;
+}
+
+.recipe-status {
+  margin: 8px var(--gutter) 0;
+  font-size: var(--size-small);
+  text-align: center;
+  color: var(--mute);
+  min-height: 1.2em;
+}
+.recipe-status[data-tone="done"] { color: var(--cool); }
+.recipe-status[data-tone="warn"] { color: var(--accent); }
+
+/* ---------- the 目安 line ---------- */
+
+/* Nutrition on the cards is estimated from the ingredient list and never
+   measured. The copy always says so; this rule only keeps it quiet. */
+.recipe-est {
+  margin: 10px var(--gutter) 0;
+  font-size: var(--size-fine);
+  line-height: 1.7;
+  color: var(--mute);
+  text-align: center;
+}
+
+/* ---------- method ---------- */
+
+.recipe-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.recipe-step {
+  margin: 0 var(--gutter) 18px;
+  text-align: center;
+}
+
+/*
+ * The comp draws this numeral at 17px in #C4C0B8, which measures 1.81:1 on white
+ * and fails AA badly. The number is content, not decoration: it tells her which
+ * step she is on. Chris approved the fix on 2026-09-20. At 24px it counts as
+ * large text, where AA asks 3:1, and #908C84 measures 3.35:1 rather than sitting
+ * on the threshold the way #98948C at 3.02:1 would. Verified rendered at 375px,
+ * not only calculated. Do not lighten it.
+ */
+.recipe-step b {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--face-display);
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: .02em;
+  color: var(--stepnum);
+}
+
+.recipe-step p {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.9;
+}
+
+/* The last step should not sit against the bottom of the scroll. */
+.recipe-steps .recipe-step:last-child { margin-bottom: 28px; }

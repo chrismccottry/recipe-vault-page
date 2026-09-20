@@ -1,0 +1,350 @@
+/*
+ * The shared shopping list. Direction C, taken from the .rC rules in
+ * page/design/variants.html, which stays the comp. Every colour is a token from
+ * shell/tokens.css; no hex value lives here.
+ *
+ * Contrast measured by hand against --paper, because the Impeccable detector
+ * runs DEGRADED on this machine and cannot compute it:
+ *   --ink     16.21:1   item names, the dish names
+ *   --mute     5.43:1   the dish a row came from, counts, notes, at 11px
+ *   --accent   4.64:1   amounts, the add button, the ticked-off rule
+ *   --cool     5.40:1   the confirmation tone on the status line
+ * Nothing here may be lightened without measuring it again.
+ *
+ * The row layout repeats the recipe screen's hard-won one: min-width:0 on the
+ * name, a capped and wrapping amount, overflow-wrap:anywhere on both. Amounts on
+ * this screen come from the same field that pushed recipe rows to 698px inside a
+ * 375px frame on 2026-09-20 — the longest is 82 characters. Do not add nowrap.
+ */
+
+/* ---------- section pills, the same shape the recipe screen uses ---------- */
+
+.list-sect {
+  display: block;
+  width: calc(100% - var(--gutter) * 2);
+  margin: 22px auto 12px;
+  padding: 11px;
+  font-family: var(--face-body);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-align: center;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+}
+
+/* ---------- empty states ---------- */
+
+.list-empty {
+  margin: 0 var(--gutter);
+  padding: 18px 0 8px;
+  text-align: center;
+  font-size: var(--size-small);
+  color: var(--mute);
+}
+.list-empty p { margin: 0; }
+
+.list-empty-link {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 6px 2px;
+  font-size: var(--size-small);
+  color: var(--cool);
+  border-bottom: 1px solid transparent;
+  transition: color var(--quick) ease, border-color var(--quick) ease;
+}
+.list-empty-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.list-empty-link:focus-visible { outline: var(--focus-width) solid var(--focus-color); outline-offset: 3px; }
+
+/* ---------- 今回の献立 ---------- */
+
+.list-dishes,
+.list-rows,
+.list-seasonings {
+  margin: 0 var(--gutter);
+  padding: 0;
+  list-style: none;
+}
+
+.list-dish {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.list-dish:last-child { border-bottom: 0; }
+
+.list-dish-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 14px;
+  color: var(--ink);
+  transition: color var(--quick) ease;
+}
+.list-dish-name small {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--size-fine);
+  color: var(--mute);
+}
+.list-dish-name:hover { color: var(--accent); }
+.list-dish-name:focus-visible { outline: var(--focus-width) solid var(--focus-color); outline-offset: 3px; }
+
+/* The remove control, shared by dishes and rows. 44px of tap target, which is
+   the smallest thing a thumb finds reliably on a phone in a shop. */
+.list-x {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  font: inherit;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--mute);
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: color var(--quick) ease, transform var(--quick) var(--ease);
+}
+.list-x:hover { color: var(--accent); transform: scale(1.08); }
+.list-x:active { transform: scale(.96); }
+.list-x:focus-visible { outline: var(--focus-width) solid var(--focus-color); outline-offset: 2px; }
+.list-x:disabled { cursor: default; opacity: .45; transform: none; }
+
+/* ---------- 買うもの ---------- */
+
+.list-progress {
+  margin: -4px var(--gutter) 10px;
+  font-size: var(--size-fine);
+  text-align: center;
+  color: var(--mute);
+}
+
+.list-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.list-row:last-child { border-bottom: 0; }
+
+/* The label is the tap target: box and text together, so a thumb aimed anywhere
+   near the words ticks the item. */
+.list-row-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 7px 0;
+  cursor: pointer;
+}
+
+.list-check {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.list-check:focus-visible { outline: var(--focus-width) solid var(--focus-color); outline-offset: 2px; }
+
+.list-row-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.list-row-name {
+  display: block;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+/* Which dish this came from. The plan asks for it on every row; a hand-typed
+   line has no dish and simply shows nothing. */
+.list-row-from {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--size-fine);
+  color: var(--mute);
+  overflow-wrap: anywhere;
+}
+
+/* Same treatment as the recipe screen's amount: capped, right-aligned, and it
+   wraps. Some amounts are whole sentences. */
+.list-row-amount {
+  flex: 0 1 auto;
+  max-width: 48%;
+  padding: 7px 0;
+  font-style: normal;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: right;
+  color: var(--accent);
+  overflow-wrap: anywhere;
+}
+
+/* Ticked off. It stays exactly where it was — a row that moves out from under
+   her thumb mid-shop is worse than a tidy list — and only goes quiet. */
+.list-row.is-done .list-row-name {
+  color: var(--mute);
+  text-decoration: line-through;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1px;
+}
+.list-row.is-done .list-row-amount { color: var(--mute); font-weight: 400; }
+
+/* ---------- 調味料 ---------- */
+
+.list-seasoning-wrap {
+  margin: 18px var(--gutter) 0;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.list-seasoning-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 13px 14px;
+  font-size: 13px;
+  letter-spacing: .04em;
+  color: var(--ink);
+  cursor: pointer;
+  list-style: none;
+  transition: background var(--quick) ease;
+}
+.list-seasoning-head::-webkit-details-marker { display: none; }
+.list-seasoning-head small { color: var(--mute); font-size: var(--size-fine); }
+/*
+ * Open swaps the glyph rather than rotating it. A rotated ＋ draws an ×, which is
+ * exactly the mark every delete control on this screen uses, and one of the two
+ * meanings is "throw this away". Seen in a screenshot at phone size on
+ * 2026-09-21; the rotation was prettier and the collision was not worth it.
+ */
+.list-seasoning-head::after {
+  content: "＋";
+  color: var(--mute);
+}
+.list-seasoning-wrap[open] .list-seasoning-head::after { content: "−"; }
+.list-seasoning-head:focus-visible { outline: var(--focus-width) solid var(--focus-color); outline-offset: -3px; }
+
+.list-seasoning-note {
+  margin: 0 14px 4px;
+  font-size: var(--size-fine);
+  line-height: 1.7;
+  color: var(--mute);
+}
+
+.list-seasonings { margin: 0 6px 8px; }
+.list-seasonings li { border-bottom: 1px solid var(--rule); }
+.list-seasonings li:last-child { border-bottom: 0; }
+
+.list-add-seasoning {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 8px;
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  transition: color var(--quick) ease, transform var(--quick) var(--ease);
+}
+.list-add-seasoning:hover { color: var(--accent); transform: translateX(2px); }
+.list-add-seasoning:active { transform: translateX(0); }
+.list-add-seasoning:focus-visible { outline: var(--focus-width) solid var(--focus-color); outline-offset: -2px; }
+.list-add-seasoning:disabled { cursor: default; opacity: .45; transform: none; }
+.list-add-seasoning small { color: var(--mute); font-size: var(--size-fine); overflow-wrap: anywhere; }
+
+.list-seasoning-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.list-plus { flex: 0 0 auto; color: var(--accent); }
+
+/* ---------- the free add box ---------- */
+
+.list-add {
+  display: flex;
+  gap: 8px;
+  margin: 20px var(--gutter) 0;
+}
+
+.list-add-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 12px 14px;
+  font: inherit;
+  font-size: var(--size-body);
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  transition: border-color var(--quick) ease;
+}
+.list-add-input::placeholder { color: var(--mute); }
+.list-add-input:hover { border-color: var(--mute); }
+.list-add-input:focus-visible {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+
+.list-add-btn {
+  flex: 0 0 auto;
+  padding: 12px 22px;
+  font: inherit;
+  font-size: var(--size-body);
+  font-weight: 500;
+  letter-spacing: .06em;
+  color: var(--paper);
+  background: var(--accent);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform var(--quick) var(--ease), opacity var(--quick) ease;
+}
+.list-add-btn:hover { transform: translateY(-1px); opacity: .92; }
+.list-add-btn:active { transform: translateY(0) scale(.99); }
+.list-add-btn:focus-visible { outline: var(--focus-width) solid var(--ink); outline-offset: 3px; }
+.list-add-btn:disabled { cursor: default; opacity: .5; transform: none; }
+
+/* ---------- the status line ---------- */
+
+/*
+ * Sticks to the bottom of the viewport while it has something to say, because
+ * the thing it is reporting on — a ticked box, a removed dish — can be most of a
+ * screen away by the time the reply lands. Empty, it takes up no room at all.
+ */
+.list-status {
+  position: sticky;
+  bottom: 0;
+  margin: 24px 0 0;
+  padding: 0;
+  font-size: var(--size-small);
+  text-align: center;
+  color: var(--mute);
+  background: var(--paper);
+}
+.list-status:not(:empty) {
+  padding: 12px var(--gutter);
+  border-top: 1px solid var(--rule);
+}
+.list-status[data-tone="done"] { color: var(--cool); }
+.list-status[data-tone="warn"] { color: var(--accent); }

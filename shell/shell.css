@@ -1,0 +1,205 @@
+/*
+ * Chrome the three screens share: the top bar, the language switch, and the
+ * loading, failure and 準備中 states. Screen-specific styling lives in that
+ * screen's own directory.
+ *
+ * Every colour here comes from tokens.css. No hex values in this file.
+ */
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--face-body);
+  font-size: var(--size-body);
+  line-height: var(--leading);
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Phase 0 proved the page also opens on a laptop, so it is capped rather than
+   stretched. On a phone this is simply the full width. */
+#app {
+  max-width: 560px;
+  margin: 0 auto;
+  padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px));
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ---------- the top bar ---------- */
+
+.shell-top {
+  position: relative;
+  padding: 28px var(--gutter) 18px;
+  text-align: center;
+  border-bottom: 1px solid var(--rule);
+}
+
+.shell-mark {
+  font-family: var(--face-display);
+  font-weight: 700;
+  font-size: var(--size-mark);
+  letter-spacing: .06em;
+}
+
+.shell-lede {
+  font-size: var(--size-small);
+  color: var(--mute);
+  margin: 6px 0 0;
+  letter-spacing: .04em;
+}
+/* Before a screen sets it, it holds no space at all. */
+.shell-lede:empty { display: none; }
+
+/* The language switch. A control, not an ornament, so it reads as a control. */
+.shell-lang {
+  position: absolute;
+  top: 22px;
+  right: var(--gutter);
+  padding: 5px 10px;
+  font: inherit;
+  font-size: var(--size-fine);
+  letter-spacing: .08em;
+  color: var(--mute);
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color var(--quick) ease, border-color var(--quick) ease,
+              transform var(--quick) var(--ease);
+}
+.shell-lang:hover { color: var(--ink); border-color: var(--ink); transform: translateY(-1px); }
+.shell-lang:active { transform: translateY(0) scale(.98); }
+.shell-lang:focus-visible { outline: var(--focus-width) solid var(--focus-color); outline-offset: 3px; }
+
+/*
+ * The shopping list, reachable from every screen.
+ *
+ * It sits opposite the language switch and is drawn as the same pill, because
+ * they are the same kind of thing: the two controls that belong to the app
+ * rather than to whatever screen is showing. Mirroring costs no new shape.
+ *
+ * Left, not beside EN on the right. Both controls are positioned out of flow
+ * so the wordmark stays centred, which leaves 112px of clear space on each
+ * side at 375px; the two of them together do not fit in one of those. Measured,
+ * not guessed.
+ *
+ * Text, no glyph. A basket would be one more thing to draw and 買い物リスト
+ * already says it in the language this page defaults to.
+ */
+.shell-list {
+  position: absolute;
+  top: 22px;
+  left: var(--gutter);
+  display: inline-block;
+  padding: 5px 10px;
+  font-size: var(--size-fine);
+  letter-spacing: .08em;
+  color: var(--mute);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color var(--quick) ease, border-color var(--quick) ease,
+              transform var(--quick) var(--ease);
+}
+.shell-list:hover { color: var(--ink); border-color: var(--ink); transform: translateY(-1px); }
+.shell-list:active { transform: translateY(0) scale(.98); }
+.shell-list:focus-visible { outline: var(--focus-width) solid var(--focus-color); outline-offset: 3px; }
+
+/* Already there. It stays visible and stays tappable, because tapping it is a
+   way to re-read a list she may have ticked on a different phone. */
+.shell-list[aria-current="page"] { color: var(--accent); border-color: var(--accent); }
+
+/* ---------- shared controls ---------- */
+
+.shell-btn {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 12px 22px;
+  font: inherit;
+  font-size: var(--size-body);
+  font-weight: 500;
+  letter-spacing: .08em;
+  color: var(--paper);
+  background: var(--accent);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform var(--quick) var(--ease), opacity var(--quick) ease;
+}
+.shell-btn:hover { transform: translateY(-1px); opacity: .92; }
+.shell-btn:active { transform: translateY(0) scale(.99); }
+.shell-btn:focus-visible { outline: var(--focus-width) solid var(--ink); outline-offset: 3px; }
+
+.shell-back {
+  display: inline-block;
+  padding: 14px var(--gutter) 6px;
+  font-size: var(--size-small);
+  color: var(--mute);
+  cursor: pointer;
+  transition: color var(--quick) ease;
+}
+.shell-back:hover { color: var(--accent); }
+.shell-back:focus-visible { outline: var(--focus-width) solid var(--focus-color); outline-offset: 2px; }
+
+/* ---------- screen heading ---------- */
+
+.shell-screen-head { padding: 6px var(--gutter) 0; text-align: center; }
+
+.shell-screen-title {
+  margin: 0;
+  font-family: var(--face-display);
+  font-weight: 700;
+  font-size: var(--size-mark);
+  letter-spacing: .01em;
+  line-height: 1.55;
+}
+
+.shell-screen-sub {
+  margin: 4px 0 0;
+  font-size: var(--size-small);
+  color: var(--mute);
+}
+
+/* ---------- loading, failure, not-built-yet ---------- */
+
+.shell-loading,
+.shell-error,
+.shell-empty {
+  padding: 44px var(--gutter);
+  text-align: center;
+  color: var(--mute);
+  font-size: var(--size-small);
+}
+
+.shell-loading-dot {
+  display: inline-block;
+  width: 7px; height: 7px;
+  margin-right: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: shell-pulse 1.1s var(--ease) infinite;
+}
+@keyframes shell-pulse { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+
+.shell-error-title,
+.shell-empty-title {
+  margin: 0 0 6px;
+  font-family: var(--face-display);
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--ink);
+}
+
+.shell-error-note,
+.shell-empty-note { margin: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .shell-loading-dot { animation: none; opacity: .8; }
+  * { transition-duration: 0s !important; }
+}
+
+.shell-error-back { margin: 10px 0 0; }

@@ -1,0 +1,130 @@
+/*
+ * Tile screen. Geometry follows the mockup Chris's wife chose on 2026-09-20
+ * (page/design/thumbnail-options.html, its .grid and .tile rules): two across,
+ * 4:3 shots, caption under.
+ *
+ * Nothing here crops, masks, overlays or dims the thumbnail. She chose the
+ * creator's burnt-in text as a recognition cue. Do not add a scrim.
+ */
+
+.btn-head { padding: 2px var(--gutter) 0; text-align: center; }
+
+.btn-title {
+  margin: 0;
+  font-family: var(--face-display);
+  font-weight: 700;
+  font-size: var(--size-mark);
+  letter-spacing: .02em;
+}
+
+.btn-sub { margin: 4px 0 0; font-size: var(--size-small); color: var(--mute); }
+
+/* ---------- tag chips ---------- */
+
+.btn-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  justify-content: center;
+  padding: 14px var(--gutter) 4px;
+}
+
+.btn-tag {
+  padding: 6px 13px;
+  font: inherit;
+  font-size: var(--size-small);
+  letter-spacing: .04em;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform var(--quick) var(--ease),
+              border-color var(--quick) ease,
+              background-color var(--quick) ease,
+              color var(--quick) ease;
+}
+.btn-tag:hover:not(:disabled) { border-color: var(--ink); transform: translateY(-1px); }
+.btn-tag:active:not(:disabled) { transform: translateY(0) scale(.99); }
+.btn-tag:focus-visible { outline: var(--focus-width) solid var(--focus-color); outline-offset: 2px; }
+
+.btn-tag.is-on {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--paper);
+}
+
+/* A tag with nothing under it here. Still readable, plainly not pressable. */
+.btn-tag:disabled { color: var(--mute); opacity: .5; cursor: default; }
+
+/* ---------- the tiles ---------- */
+
+.btn-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+  gap: 14px 12px;
+  padding: 16px 14px 22px;
+}
+
+.btn-tile {
+  display: block;
+  min-width: 0;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+  transition: transform var(--quick) var(--ease);
+}
+.btn-tile:hover { transform: translateY(-2px); }
+.btn-tile:hover img { opacity: .92; }
+.btn-tile:active { transform: translateY(0) scale(.99); }
+.btn-tile:focus-visible {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: 3px;
+  border-radius: 11px;
+}
+
+.btn-shot {
+  display: block;
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 9px;
+  overflow: hidden;
+  background: var(--rule);
+}
+
+.btn-shot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity var(--quick) ease;
+}
+
+/* The one card that is not from YouTube and has no thumbnail. */
+.btn-shot.is-blank { display: grid; place-items: center; }
+.btn-shot-blank {
+  font-family: var(--face-display);
+  font-size: var(--size-small);
+  color: var(--mute);
+}
+
+.btn-tile b {
+  display: block;
+  margin-top: 7px;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1.45;
+  letter-spacing: .01em;
+  overflow-wrap: anywhere;
+}
+
+.btn-tile i {
+  display: block;
+  margin-top: 1px;
+  font-style: normal;
+  font-size: var(--size-fine);
+  color: var(--mute);
+}
+
+.btn-none { padding: 36px var(--gutter); text-align: center; color: var(--mute); font-size: var(--size-small); }

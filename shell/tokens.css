@@ -1,0 +1,60 @@
+/*
+ * Direction C, アイコン ／ 白と柿. The one source of truth for colour, type and
+ * motion. Every screen imports this and uses the variables; no screen redeclares
+ * a hex value of its own.
+ *
+ * Chosen by Chris 2026-09-20 and reaffirmed when asked a second time.
+ * Lifted from the .vC rules in page/design/variants.html, which stays the comp.
+ *
+ * Contrast measured by hand on 2026-09-20, because the Impeccable detector runs
+ * DEGRADED on this machine and cannot compute it at all. Ratios against --paper:
+ *   --ink    16.21:1   passes AA at any size
+ *   --mute    5.43:1   passes AA for small text (it was 3.74:1 and was darkened)
+ *   --accent   4.64:1   passes AA for small text
+ *   --cool     5.40:1   passes AA for small text
+ *   --stepnum  3.35:1   passes AA for LARGE text only, at the 24px it is used at
+ * Do not lighten --mute or --stepnum back toward their original values. --mute
+ * failed AA at 11px. The comp's step numeral was #C4C0B8 at 1.81:1, which is not
+ * a near miss, and the numeral is content: it tells her which step she is on.
+ * #98948C would also clear AA large at 3.02:1, but it sits on the threshold, so
+ * --stepnum is set below it with room to spare.
+ *
+ * --accent is also the 21px recipe title, where it passes comfortably.
+ */
+
+:root {
+  /* Colour */
+  --paper:  #FFFFFF;
+  --ink:    #23201D;
+  --rule:   #E8E4DE;   /* hairline dividers only, never text */
+  --mute:   #6F6961;
+  --accent: #C4502A;   /* レシピさん's persimmon, so page and bot read as one thing */
+  --cool:   #3C6E9A;
+  --stepnum:#908C84;   /* step numerals, 24px and up only. See the note above. */
+
+  /* Type. Never one family doing both jobs: serif display over sans body. */
+  --face-body:    "Noto Sans JP", system-ui, sans-serif;
+  --face-display: "Shippori Mincho", serif;
+
+  --size-mark:   21px;  /* wordmark and screen titles */
+  --size-body:   14px;
+  --size-small:  12px;
+  --size-fine:   11px;  /* counts and captions; --mute is AA-safe at this size */
+  --leading:     1.7;
+
+  /* Motion. Transform and opacity only, and no overshoot: nine overshooting
+     transitions were replaced in the comp for exactly that reason. */
+  --ease:  cubic-bezier(.16, 1, .3, 1);
+  --quick: .18s;
+
+  /* Focus. Every clickable thing shows this, no exceptions. */
+  --focus-width: 2.5px;
+  --focus-color: var(--accent);
+
+  /* Layout */
+  --gutter: 20px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --quick: 0s; }
+}

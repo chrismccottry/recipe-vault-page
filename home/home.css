@@ -1,0 +1,155 @@
+/*
+ * Home screen. The grid follows the .vC comp in page/design/variants.html:
+ * two columns of icon cells divided by hairlines, no cards and no boxes.
+ * Colours come from tokens.css; there are no hex values in this file.
+ */
+
+.home-all {
+  display: block;
+  margin: 18px auto 6px;
+  width: calc(100% - 40px);
+  padding: 13px;
+  text-align: center;
+  background: transparent;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  color: var(--ink);
+  font-size: var(--size-body);
+  font-weight: 500;
+  letter-spacing: .1em;
+  cursor: pointer;
+  transition: transform var(--quick) var(--ease),
+              background-color var(--quick) ease,
+              color var(--quick) ease;
+}
+.home-all:hover { background: var(--ink); color: var(--paper); transform: translateY(-1px); }
+.home-all:active { transform: translateY(0) scale(.99); }
+.home-all:focus-visible { outline: var(--focus-width) solid var(--focus-color); outline-offset: 3px; }
+
+/* ---------- the ingredient grid ---------- */
+
+.home-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 10px var(--gutter) 24px;
+}
+
+.home-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 4px;
+  text-align: left;
+  color: inherit;
+  border-bottom: 1px solid var(--rule);
+  cursor: pointer;
+  transition: transform var(--quick) var(--ease);
+}
+.home-cell:nth-child(odd)  { border-right: 1px solid var(--rule); padding-right: 10px; }
+.home-cell:nth-child(even) { padding-left: 12px; }
+
+.home-cell:hover { transform: translateY(-2px); }
+.home-cell:hover svg { stroke: var(--accent); }
+.home-cell:active { transform: translateY(0); }
+.home-cell:focus-visible { outline: var(--focus-width) solid var(--focus-color); outline-offset: -2px; }
+
+.home-cell svg {
+  flex: 0 0 22px;
+  width: 22px;
+  height: 22px;
+  stroke: var(--cool);
+  fill: none;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke var(--quick) ease;
+}
+
+.home-cell-label { min-width: 0; }
+.home-cell-label b {
+  display: block;
+  font-weight: 500;
+  font-size: var(--size-body);
+  letter-spacing: .02em;
+}
+.home-cell-label i {
+  font-style: normal;
+  font-size: var(--size-fine);
+  color: var(--mute);
+}
+
+/* One recipe: quieter, and saying 準備中 alongside its count, but still a real
+   button that goes somewhere. Matches the comp's .thin cells. */
+.home-cell.is-thin b { color: var(--mute); }
+.home-cell.is-thin i { color: var(--accent); }
+
+/* Nothing in it yet: not a link, and it says how to fill it. */
+.home-cell.is-empty {
+  cursor: default;
+  transform: none;
+}
+.home-cell.is-empty b { color: var(--mute); }
+.home-cell.is-empty i { color: var(--accent); }
+.home-cell.is-empty:hover { transform: none; }
+.home-cell.is-empty:hover svg { stroke: var(--cool); }
+.home-cell-hint {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--size-fine);
+  line-height: 1.5;
+  color: var(--mute);
+}
+
+/* ---------- the cook row ---------- */
+
+.home-section { padding: 4px var(--gutter) 8px; border-top: 1px solid var(--rule); }
+
+.home-section-title {
+  margin: 20px 0 12px;
+  font-family: var(--face-display);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: .08em;
+  text-align: center;
+}
+
+.home-cooks { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+
+/* display:flex beats the hidden attribute's display:none from the UA sheet, so
+   the folded half stays on screen without this. Caught by rendering it. */
+.home-cooks[hidden] { display: none; }
+
+.home-cook {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  font-size: var(--size-small);
+  cursor: pointer;
+  transition: transform var(--quick) var(--ease), border-color var(--quick) ease;
+}
+.home-cook:hover { border-color: var(--ink); transform: translateY(-1px); }
+.home-cook:active { transform: translateY(0) scale(.99); }
+.home-cook:focus-visible { outline: var(--focus-width) solid var(--focus-color); outline-offset: 2px; }
+
+.home-cook-count { font-size: var(--size-fine); color: var(--mute); }
+
+.home-cooks-more { margin-top: 8px; }
+
+.home-more {
+  display: block;
+  margin: 14px auto 4px;
+  padding: 8px 16px;
+  background: none;
+  border: 0;
+  color: var(--mute);
+  font: inherit;
+  font-size: var(--size-small);
+  letter-spacing: .04em;
+  cursor: pointer;
+  transition: color var(--quick) ease;
+}
+.home-more:hover { color: var(--accent); }
+.home-more:focus-visible { outline: var(--focus-width) solid var(--focus-color); outline-offset: 2px; }
